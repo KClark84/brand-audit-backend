@@ -1,3 +1,4 @@
+
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -19,20 +20,23 @@ app.post('/api/audit', async (req, res) => {
   }
 
   try {
-    // Fetch website HTML
+    console.log("Scraping from:", websiteURL);
+
     const response = await axios.get(websiteURL, {
-  headers: {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-  },
-  timeout: 10000,
-});
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+      },
+      timeout: 10000,
+    });
+
     const $ = cheerio.load(response.data);
 
-    // Basic scrape
-    const title = $('title').text() || '';
-    const meta = $('meta[name="description"]').attr('content') || '';
-    const h1 = $('h1').first().text() || '';
-    const image = $('img').first().attr('src') || '';
+    const title = $('title').text() || 'No title found';
+    const meta = $('meta[name="description"]').attr('content') || 'No meta description';
+    const h1 = $('h1').first().text() || 'No H1 found';
+    const image = $('img').first().attr('src') || 'No image found';
+
+    console.log("Scraped:", { title, meta, h1, image });
 
     const prompt = `
 Here is a brand’s basic website data:
@@ -48,9 +52,10 @@ Give a short but insightful brand audit with:
 4. Suggestion for Improvement
 
 Tone: Confident, helpful, slightly witty.
-`;
+    `;
 
-    // Call OpenAI
+    console.log("Sending to OpenAI...");
+
     const openaiRes = await axios.post('https://api.openai.com/v1/chat/completions', {
       model: "gpt-4",
       messages: [{ role: "user", content: prompt }],
@@ -63,14 +68,14 @@ Tone: Confident, helpful, slightly witty.
     });
 
     const result = openaiRes.data.choices[0].message.content;
+    console.log("Audit Result:", result);
+
     res.json({ audit: result });
 
   } catch (error) {
-    console.error(error.message);
+    console.error("ERROR:", error.response?.data || error.message || error);
     res.status(500).json({ error: 'Audit failed. Check URL or try again later.' });
   }
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-

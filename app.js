@@ -13,7 +13,11 @@ app.use(bodyParser.json());
 const PORT = process.env.PORT || 3000;
 
 app.post('/api/audit', async (req, res) => {
-  const { brandName, websiteURL } = req.body;
+  const { brandName, websiteURL, email } = req.body;
+
+  console.log("✉️ Audit requested by:", email || "No email provided");
+  ...
+
 
   if (!websiteURL) {
     return res.status(400).json({ error: 'Missing website URL' });

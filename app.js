@@ -20,7 +20,12 @@ app.post('/api/audit', async (req, res) => {
 
   try {
     // Fetch website HTML
-    const response = await axios.get(websiteURL);
+    const response = await axios.get(websiteURL, {
+  headers: {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+  },
+  timeout: 10000,
+});
     const $ = cheerio.load(response.data);
 
     // Basic scrape

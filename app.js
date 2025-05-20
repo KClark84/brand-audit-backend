@@ -13,26 +13,18 @@ app.use(bodyParser.json());
 const PORT = process.env.PORT || 3000;
 
 app.post('/api/audit', async (req, res) => {
-    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-
-  // Track hits per IP in memory
+  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
   global.ipHits = global.ipHits || {};
   const now = Date.now();
-
-  // Keep only hits within the last 60 seconds
   global.ipHits[ip] = global.ipHits[ip] || [];
   global.ipHits[ip] = global.ipHits[ip].filter(ts => now - ts < 60000);
   global.ipHits[ip].push(now);
-
-  // Limit to 5 requests per minute
   if (global.ipHits[ip].length > 5) {
     return res.status(429).json({ error: "You're moving too fast. Please wait a minute." });
   }
 
   const { brandName, websiteURL, email } = req.body;
-
-  console.log("✉️ Audit requested by:", email || "No email provided");
-  ...
+  console.log("Audit requested by:", email || "No email provided");
 
 
   if (!websiteURL) {

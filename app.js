@@ -51,20 +51,20 @@ app.post('/api/audit', async (req, res) => {
     console.log("Scraped:", { title, meta, h1, image });
 
     const prompt = `
-Here is a brand’s basic website data:
-- Brand Name: ${brandName}
+Based on this brand data:
+- Brand: ${brandName}
 - Title: ${title}
 - H1: ${h1}
 - Meta: ${meta}
 
-Give a short but insightful brand audit with:
-1. Brand Vibe
-2. Design Feedback
-3. Voice & Messaging
-4. Suggestion for Improvement
+Give a punchy brand audit in under 150 words. Include:
+1. Brand Vibe (quick read)
+2. Visuals (what works, what doesn't)
+3. Messaging (what’s landing or not)
+4. One tough-love suggestion
 
-Tone: Confident, helpful, slightly witty.
-    `;
+Tone: Edgy but helpful. Talk like a smart creative director who doesn’t waste words.
+`;
 
     console.log("Sending to OpenAI...");
 

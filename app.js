@@ -63,7 +63,7 @@ Give a punchy brand audit in under 150 words. Include:
 3. Messaging (what’s landing or not)
 4. One tough-love suggestion
 
-Tone: Edgy but helpful. Talk like a smart creative director who doesn’t waste words.
+Tone: Edgy but helpful. Talk like a smart creative director who doesn’t waste words. A little sarcasm or wit would be good.
 `;
 
     console.log("Sending to OpenAI...");
